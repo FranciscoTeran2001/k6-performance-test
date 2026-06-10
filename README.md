@@ -19,7 +19,7 @@ Para ejecutar este proyecto de forma local, debe tener instalado y configurado l
 ```
 k6 version
 ```
-   Si no lo tiene instalado, puede descargarlo desde: https://k6.io/docs/getting-started/installation/
+   Si no lo tiene instalado, puede descargarlo desde: https://grafana.com/docs/k6/latest/set-up/install-k6/
 
 
 
