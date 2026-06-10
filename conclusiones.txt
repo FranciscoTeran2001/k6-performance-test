@@ -1,0 +1,58 @@
+CONCLUSIONES Y HALLAZGOS
+1. RESULTADOS OBTENIDOS
+  THRESHOLDS:
+  - p(95) de http_req_duration = 414 ms (cumple el límite de 1500 ms)
+  - Tasa de errores HTTP = 0.00% (cumple el límite de < 3%)
+
+  MÉTRICAS DE TIEMPO DE RESPUESTA:
+  - Promedio: 366 ms
+  - Mínimo: 313 ms
+  - Mediana: 329 ms
+  - Máximo: 3165 ms (pico aislado)
+  - p(90): 371 ms
+  - p(95): 414 ms (cumple el límite de 1500 ms)
+
+  VALIDACIONES FUNCIONALES:
+  - Total de checks ejecutados: 1803
+  - Checks exitosos: 1799 (99.77%)
+  - Checks fallidos: 4 (0.22%)
+    - Los 4 que fallaron corresponden al check 'tiempo menor a 1.5s' originados por el 
+    pico de 3165 ms registrado como valor máximo.
+
+  CONCURRENCIA:
+  - VUs máximos utilizados: 11 de 50 pre-asignados
+    - El servidor respondió con suficiente rapidez como para que K6 solo necesitara 11 usuarios virtuales concurrentes.
+
+2. HALLAZGOS
+  El servicio de login respondió en promedio en 366 ms, muy por 
+  debajo del límite de 1500 ms.La tasa de errores HTTP fue 0%, 
+  superando el criterio de < 3%.
+
+  Se registró un valor máximo de 3165 ms en una petición.
+  Al tratarse de un servidor público puede ser el esperado 
+  por condiciones variables de red o de carga compartida del servidor. 
+  No representa un problema estructural del servicio porque el percentil 
+  p(95) se mantuvo en 414 ms.
+
+  K6 utilizó un máximo de 11 VUs(Usuarios virtuales) concurrentes para sostener los 20 TPS,
+  de los 50 preasignados. Esto indica que el servidor procesa las
+  peticiones con suficiente velocidad como para no requerir alta
+  concurrencia.
+
+  La rotación circular del CSV garantizó que los 5 usuarios del enunciado
+  fueran utilizados de forma equitativa durante la prueba, eso permite que 
+  no se repita el mismo usuario.
+
+3. CONCLUSIONES GENERALES
+  El servicio de login cumple los criterios de aceptación definidos
+  p(95) = 414 ms < 1 500 ms y tasa de error = 0.00% < 3%.
+
+  El executor 'constant-arrival-rate' es el más adecuado para medir
+  TPS reales porque mantiene la tasa de llegada constante sin importar
+  el tiempo de respuesta.
+
+  La diferencia entre http_req_waiting (365 ms) y http_req_duration
+  (366 ms) confirma que el tiempo de red es despreciable. El 99% del 
+  tiempo de respuesta es procesamiento del servidor backend.
+
+
